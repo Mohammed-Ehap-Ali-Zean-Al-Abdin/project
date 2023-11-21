@@ -4,7 +4,7 @@
   "description": "",
   "main": "profile.js",
   "scripts": {
-    "start": "node app"
+    "start": "npm start"
   },
   "author": "Mohamed Yousri",
   "license": "ISC",
