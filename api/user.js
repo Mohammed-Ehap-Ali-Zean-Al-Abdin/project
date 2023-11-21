@@ -1,8 +1,8 @@
-const express = require("express");
-const router = express.Router();
-const User = require("../models/User");
-const bcrypt = require("bcrypt");
-
+import { Router } from "express";
+const router = Router();
+import User from "../models/User.js";
+import pkg from "bcryptjs";
+const { hash, compare } = pkg;
 //signup
 router.post("/signup", (req, res) => {
   let { name, email, password, age } = req.body;
@@ -31,7 +31,7 @@ router.post("/signup", (req, res) => {
       message: "Password is too short",
     });
   } else {
-    User.find({ email })
+    find({ email })
       .then((result) => {
         if (result.length) {
           //a user is already exist
@@ -43,8 +43,7 @@ router.post("/signup", (req, res) => {
           //try to create user
           //password handling
           const saltRounds = 10;
-          bcrypt
-            .hash(password, saltRounds)
+          hash(password, saltRounds)
             .then((hashedpassword) => {
               const newUser = new User({
                 name,
@@ -99,12 +98,11 @@ router.post("/signin", (req, res) => {
     });
   } else {
     // البحث عن المستخدم باستخدام البريد الإلكتروني
-    User.find({ email }).then((data) => {
+    find({ email }).then((data) => {
       if (data.length) {
         // مقارنة كلمة المرور المدخلة بالكلمة المخزنة
         const hashedpassword = data[0].password;
-        bcrypt
-          .compare(password, hashedpassword)
+        compare(password, hashedpassword)
           .then((result) => {
             if (result) {
               res.json({
@@ -130,4 +128,4 @@ router.post("/signin", (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
